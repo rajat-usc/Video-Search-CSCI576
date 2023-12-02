@@ -1,2 +1,5 @@
 Videos/*
-_pycahce_/*
+__pycache__/*
+Queries/*
+Scenes/*
+Audios/*
