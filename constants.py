@@ -10,11 +10,13 @@ db_folder = os.path.join(base, "Database")
 sql_create_scenes_table = """CREATE TABLE IF NOT EXISTS scenes (
                                     scene_name text PRIMARY KEY,
                                     video_name text NOT NULL,
-                                    start_time text NOT NULL,
-                                    end_time text NOT NULL,
-                                    duration integer NOT NULL,
-                                    first_frame text NOT NULL,
-                                    last_frame text NOT NULL,
-                                    audio_name text NOT NULL,
-                                    speech_to_text text NOT NULL,
+                                    start_time integer,
+                                    end_time integer,
+                                    duration integer,
+                                    first_frame text,
+                                    last_frame text,
+                                    audio_name text,
+                                    speech_to_text text
                                 );"""
+
+sql_test_command = "SELECT 9 FROM DUAL;"
