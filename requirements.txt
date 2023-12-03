@@ -1,11 +1,14 @@
 asttokens==2.4.1
+audiodiff @ git+https://github.com/SteveClement/audiodiff.git@7ebc8552fe646083dc2b29c4c15b800b61cdc457
 audioread==3.0.1
 certifi==2023.11.17
+cffi==1.16.0
 charset-normalizer==3.3.2
 chromaprint==0.5
 click==8.1.7
 colorama==0.4.6
 comm==0.2.0
+comtypes==1.2.0
 debugpy==1.8.0
 decorator==5.1.1
 executing==2.0.1
@@ -21,6 +24,8 @@ jupyter_client==8.6.0
 jupyter_core==5.5.0
 jupyterlab-widgets==3.0.9
 matplotlib-inline==0.1.6
+mutagen==1.47.0
+mutagenwrapper @ git+https://github.com/SteveClement/mutagenwrapper.git@2d9f8cac9a6a7cc811943536c7716ad4317023c9
 nest-asyncio==1.5.8
 numpy==1.26.2
 opencv-python==4.8.1.78
@@ -31,6 +36,7 @@ prompt-toolkit==3.0.41
 psutil==5.9.6
 pure-eval==0.2.2
 pyacoustid==1.3.0
+pycparser==2.21
 Pygments==2.17.0
 python-dateutil==2.8.2
 pywin32==306
@@ -39,7 +45,9 @@ requests==2.31.0
 scenedetect==0.6.2
 setuptools==68.0.0
 six==1.16.0
+soundfile==0.12.1
 stack-data==0.6.3
+termcolor==1.1.0
 tornado==6.3.3
 tqdm==4.66.1
 traitlets==5.13.0
