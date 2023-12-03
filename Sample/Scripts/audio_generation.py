@@ -21,6 +21,7 @@ def main():
     start = perf_counter()
     video_folder = constants.scene_folder
 
+    print(f" GENERATING AUDIO FOR VIDEOS : {video_folder}")
     for video in tqdm(os.listdir(video_folder)):
         video_path = os.path.join(video_folder, video)
         convert_video_to_audio_ffmpeg(video_path)
