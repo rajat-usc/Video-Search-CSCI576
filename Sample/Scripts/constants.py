@@ -5,6 +5,7 @@ base = os.path.join(os.getcwd(), "Video-Search-CSCI576", "Sample")
 video_folder = os.path.join(base, "Video")
 scene_folder = os.path.join(base, "Scene")
 queries_folder = os.path.join(base, "Query")
+buffer_folder = os.path.join(base, "Buffer")
 
 DB_NAME = "sample.db"
 
