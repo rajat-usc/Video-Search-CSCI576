@@ -7,13 +7,13 @@ import constants
 import csv
 
 
-def split_video(num: str, scene_list: list):
+def split_video(num: str, scene_list: list, frame_num: int):
     video_path = os.path.join(constants.video_folder, f"video{num}.mp4")
     try:
         split_video_ffmpeg(
             video_path,
             scene_list,
-            os.path.join(constants.queries_folder, "$VIDEO_NAME - $SCENE_NUMBER.mp4"),
+            os.path.join(constants.queries_folder, f"$VIDEO_NAME - {frame_num}.mp4"),
         )
     except Exception as e:
         print(f" failure : {video_path}\n timestamp : {scene_list}")
@@ -37,7 +37,7 @@ def generate_queries(query_list: list) -> int:
         time_split = tuple([start_timecode, end_timecode])
         try:
             print(video_number, time_split)
-            split_video(video_number, [time_split])
+            split_video(video_number, [time_split], start_timecode.frame_num)
             x += 1
         except Exception as e:
             print(f" error: {e} ")
