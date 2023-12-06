@@ -3,26 +3,18 @@ import math
 import speech_recognition as sr
 import pylcs
 import time
-import numpy as np
-from skimage.metrics import structural_similarity as ssim
 import os
 import json
 from pydub import AudioSegment
-from tqdm import tqdm
 import re
-from skimage.metrics import structural_similarity as ssim
-import cv2
-from scenedetect import VideoManager
-from scenedetect import SceneManager
-from scenedetect.detectors import ContentDetector
-import imagehash
-from PIL import Image
 
 
 class QueryTextMatcher:
     def __init__(self):
-        self.videos_data = self.read_existing_transcriptions(os.path.join(os.getcwd(), 'text_matching/transcriptions.json'))
-        self.queries_data = self.read_existing_transcriptions_q(os.path.join(os.getcwd(), 'text_matching/transcriptions_queries.json'))
+        self.videos_data = self.read_existing_transcriptions(
+            os.path.join(os.getcwd(), 'text_matching/transcriptions.json'))
+        self.queries_data = self.read_existing_transcriptions_q(
+            os.path.join(os.getcwd(), 'text_matching/transcriptions_queries.json'))
         self.recognizer = sr.Recognizer()
 
     def read_existing_transcriptions(self, file_path):
@@ -54,10 +46,8 @@ class QueryTextMatcher:
                 for interval in intervals:
                     start_interval = self.convert_to_seconds(interval[0])
                     end_interval = self.convert_to_seconds(interval[1])
-                    for i in range(math.floor(start_interval/15)-1, math.ceil(end_interval/15)):
+                    for i in range(max(0, math.floor(start_interval/15)-1), math.ceil(end_interval/15)):
                         search_space[video].append(self.videos_data[video][i])
-            # print("Search space:", search_space)
-
         else:
             search_space = self.videos_data
 
@@ -77,9 +67,9 @@ class QueryTextMatcher:
         parts = time_str.split(':')
 
         hours, minutes, seconds = map(float, parts)
-        total_seconds = (hours * 3600) + minutes * 60 + seconds 
+        total_seconds = (hours * 3600) + minutes * 60 + seconds
         return total_seconds
-    
+
     def longest_common_substring_pylcs(self, s1, s2):
         res = pylcs.lcs_string_idx(s1, s2)
         return len(''.join([s2[i] for i in res if i != -1]))
@@ -94,7 +84,7 @@ class QueryTextMatcher:
     def transcribe_query(self, query_path, use_pretranscribed_query=True):
         if use_pretranscribed_query:
             return self.queries_data[query_path.split('/')[-1].split('.')[0]]
-        
+
         audio = AudioSegment.from_wav(query_path)
         temp_file = "temp_query.wav"
         audio.export(temp_file, format="wav")
@@ -123,12 +113,12 @@ class QueryTextMatcher:
             res = self.find_text(query_text, matched_scenes)
             end_time_itr = time.time()
             time_func_itr = end_time_itr - start_time_itr
-            print("Time taken for text matching: " + str(time_func_itr))
+            print(f"Time taken for text matching: {time_func_itr:.5f} seconds")
             if res:
                 return res
             else:
                 return None
-            
+
 
 # matcher = QueryTextMatcher('./../Videos')
 # matcher.find_query('./../Queries/video11_2.mp4')

@@ -1,22 +1,25 @@
-import sys
 from consecutive_matching import get_video_clip
 from text_matching.QueryTextMatcher import QueryTextMatcher
 from frame_matching.QueryFrameMatcher import QueryFrameMatcher
-import os
+from media_player_1 import VideoPlayer
+import os, time, sys
+from PyQt5.QtWidgets import QApplication
+
+                             
 
 def main():
-    # if len(sys.argv) != 4:
-    #     print("python script.py <mp4_file> <wav_file> <rgb_file>")
-    #     sys.exit(1)
-
     # Extracting arguments
     mp4_file = sys.argv[1]
     wav_file = sys.argv[2]
     rgb_file = sys.argv[3]
 
+    app = QApplication(sys.argv)
+
     mp4_file = './Queries/video6_1.mp4'
     wav_file = './Queries/audio/video6_1.wav'
     rgb_file = ''
+
+    start_processing_time = time.time()
 
     base = os.getcwd()
     video_folder = os.path.join(base, "Videos")
@@ -40,15 +43,24 @@ def main():
 
     
     shot_boundary_res = get_video_clip(mp4_file, './Frames/Video_6_Frames/')
-    text_matcher = QueryTextMatcher()
+    # TODO(L): if not shot_boundary_res, set shot_boundary_res to scenes > 20
     matched_chunk = text_matcher.find_query(wav_file, shot_boundary_res)
-    # TODO(L): if not matched_chunk, set matched_chunk to scenes > 20
     # print(matched_chunk)
-    frame_matcher = QueryFrameMatcher(video_folder, rgb_folder)
-    frame_matcher.find_query(mp4_file, matched_chunk)
 
+    # TODO: if not matched_chunk, add audio matching
 
+    startFrame = frame_matcher.find_query(mp4_file, matched_chunk)
 
-    
+    startTime = startFrame / 30 # 30 is the FPS
+    if matched_chunk:
+        filename = os.path.join(os.getcwd(), 'Videos', matched_chunk['video'] + '.mp4')
+
+    end_processing_time = time.time()
+    print(f"Time taken for total processing: {(end_processing_time-start_processing_time):.5f} seconds")
+    videoplayer = VideoPlayer(filename, startTime, startFrame)
+    videoplayer.setFixedSize(375, 388)
+    videoplayer.show()
+    sys.exit(app.exec_())
+
 if __name__ == "__main__":
     main()

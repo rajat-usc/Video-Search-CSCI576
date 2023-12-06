@@ -135,7 +135,7 @@ def get_video_clip(query_path, video_frames_path):
         # Calculate the runtime
         runtime = end_time - start_time
         # Print the runtime
-        print(f"Total Frame creation runtime: {runtime:.5f} seconds")
+        print(f"Time taken for query frame creation: {runtime:.5f} seconds")
         # Record the start time
         start_time = time.time()
         vid_frame_list = os.listdir(video_frames_path)
@@ -152,7 +152,7 @@ def get_video_clip(query_path, video_frames_path):
         # Calculate the runtime
         runtime = end_time - start_time
         # Print the runtime
-        print(f"Total Matching Time: {runtime:.5f} seconds")
+        print(f"Time taken for shot boundary matching: {runtime:.5f} seconds")
         # Record the start time
         start_time = time.time()
         first_frames = defaultdict(list)
@@ -192,7 +192,7 @@ def get_video_clip(query_path, video_frames_path):
         runtime = end_time - start_time
 
         # Print the runtime
-        print(f"Total Array processing runtime: {runtime:.5f} seconds")
+        print(f"Time taken for array processing: {runtime:.5f} seconds")
         #print(result)
         return result
 
