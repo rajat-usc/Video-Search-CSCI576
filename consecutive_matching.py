@@ -40,7 +40,7 @@ def check_diff_imagehash(query_frame, video_frame):
     cutoff = 5  # maximum bits that could be different between the hashes.
 
     if hash0 - hash1 < cutoff:
-        print(video_frame, ':', query_frame)
+        # print(video_frame, ':', query_frame)
         # print(hash0)
         # print(hash1)
         return True
@@ -146,9 +146,7 @@ def get_video_clip(query_path, video_frames_path):
             for vid_frame in vid_frame_list:
                 if check_diff_imagehash(query_frames_path + query_frame, video_frames_path + vid_frame):
                     matched_frames[vid_frame].append(query_frame)
-        if len(matched_frames) > 0:
-            print("Matches Found")
-            print(matched_frames)
+
         # Record the end time
         end_time = time.time()
         # Calculate the runtime
@@ -168,7 +166,7 @@ def get_video_clip(query_path, video_frames_path):
                 elif "first" in matched_v_frame and "first" in matched_q_frame:
                     first_frames[v_frame_number].append(q_frame_number)
         consecutive_matched_frames = find_consecutive_scenes(first_frames, last_frames, len(query_scene_list) - 1)
-        print(consecutive_matched_frames)
+        # print(consecutive_matched_frames)
 
         with open(video_frames_path + timecode_csv, "r") as file:
             timecodes = file.readline().strip().split(',')
@@ -185,7 +183,7 @@ def get_video_clip(query_path, video_frames_path):
             result['video'+video_num] = []
         for start_scene, end_scene in consecutive_matched_frames.items():
             result['video'+video_num].append((timecodes[start_scene-1], timecodes[end_scene]))
-            print(timecodes[start_scene-1], timecodes[end_scene])
+            #print(timecodes[start_scene-1], timecodes[end_scene])
 
         # Record the end time
         end_time = time.time()
@@ -195,7 +193,7 @@ def get_video_clip(query_path, video_frames_path):
 
         # Print the runtime
         print(f"Total Array processing runtime: {runtime:.5f} seconds")
-        print(result)
+        #print(result)
         return result
 
 #get_video_clip('./Queries/video11_1.mp4', './Frames/Video_11_Frames/')

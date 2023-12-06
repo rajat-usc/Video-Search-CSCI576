@@ -56,7 +56,7 @@ class QueryTextMatcher:
                     end_interval = self.convert_to_seconds(interval[1])
                     for i in range(math.floor(start_interval/15)-1, math.ceil(end_interval/15)):
                         search_space[video].append(self.videos_data[video][i])
-            print("Search space:", search_space)
+            # print("Search space:", search_space)
 
         else:
             search_space = self.videos_data
@@ -68,7 +68,7 @@ class QueryTextMatcher:
                     chunk_text_preprocessed, input_text)
 
                 if similarity_len >= 60 and similarity_len > max_len:
-                    print(similarity_len, chunk['start_time'])
+                    # print(similarity_len, chunk['start_time'])
                     max_len = similarity_len
                     max_chunk = {"video": video_name, "chunk": chunk}
         return max_chunk
@@ -90,6 +90,7 @@ class QueryTextMatcher:
         second = int(time_in_seconds % 60)
         return minute, second
 
+    # NOTE: use_pretranscribed_query should be set ot False for any queries other than the ones given by TAs
     def transcribe_query(self, query_path, use_pretranscribed_query=True):
         if use_pretranscribed_query:
             return self.queries_data[query_path.split('/')[-1].split('.')[0]]
@@ -114,7 +115,7 @@ class QueryTextMatcher:
         return ""
 
     def find_query(self, query_path, matched_scenes={}, use_pretranscribed_query=True):
-        print(matched_scenes)
+        # print(matched_scenes)
         query_text = self.transcribe_query(
             query_path, use_pretranscribed_query)
         if query_text:
