@@ -5,6 +5,7 @@ import os
 import math
 import time
 import numpy as np
+import random
 
 
 class QueryFrameMatcher:
@@ -54,48 +55,6 @@ class QueryFrameMatcher:
 
         return first_frame, last_frame, total_frames
 
-    def find_matching_window_1(self, main_video_path, start_time, target_start_frame, target_end_frame, window_size, interval=30):
-        print("Started searching for frame at " + str(start_time))
-        cap = cv2.VideoCapture(main_video_path)
-        cap2 = cv2.VideoCapture(main_video_path)
-        fps = cap.get(cv2.CAP_PROP_FPS)
-
-        start_frame_number = int(start_time * fps)
-        end_frame_number = int((start_time + interval) * fps)
-
-        cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame_number)
-
-        start_pointer = 0
-        end_pointer = 0
-        frames = []
-        frame_counter = 0
-
-        while True:
-            ret, frame = cap.read()
-            if not ret or cap.get(cv2.CAP_PROP_POS_FRAMES) > end_frame_number:
-                break
-
-            frame_counter += 1
-            frames.append(frame)
-
-            end_pointer += 1
-            if end_pointer - start_pointer > window_size:
-                frames.pop(0)
-                start_pointer += 1
-
-            if end_pointer - start_pointer == window_size:
-                matched_start = self.compare_frame_hashes(
-                    frames[0], target_start_frame)
-                if matched_start:
-                    matched_end = self.compare_frame_hashes(
-                        frames[-1], target_end_frame)
-                    if matched_end:
-                        exact_time = (start_frame_number + start_pointer) / fps
-                        cap.release()
-                        return exact_time, start_frame_number + start_pointer
-
-        cap.release()
-        return None, None
 
     def compare_frame_hashes_rgb(self, frame_data1, frame_data2, width=352, height=288):
         frame1 = np.frombuffer(
@@ -103,47 +62,95 @@ class QueryFrameMatcher:
         frame2 = np.frombuffer(
             frame_data2, dtype=np.uint8).reshape((height, width, 3))
 
-        frame1_image = Image.fromarray(frame1)
-        frame2_image = Image.fromarray(frame2)
+        return np.array_equal(frame_data1, frame_data2)
 
-        hash1 = imagehash.average_hash(frame1_image, hash_size=16)
-        hash2 = imagehash.average_hash(frame2_image, hash_size=16)
 
-        return hash1 == hash2
+        # frame1_image = Image.fromarray(frame1)
+        # frame2_image = Image.fromarray(frame2)
 
-    def compare_frame_hashes(self, frame_data1, frame_data2):
-        frame1_image = Image.fromarray(frame_data1)
-        frame2_image = Image.fromarray(frame_data2)
+        # hash1 = imagehash.average_hash(frame1_image, hash_size=16)
+        # hash2 = imagehash.average_hash(frame2_image, hash_size=16)
 
-        hash1 = imagehash.average_hash(frame1_image, hash_size=16)
-        hash2 = imagehash.average_hash(frame2_image, hash_size=16)
+        # return hash1 == hash2
 
-        return hash1 == hash2
+    
+    # def print_array_differences(self, frame_data1, frame_data2, filename1, filename2, width=352, height=288):
+    
+    #     frame1 = np.frombuffer(frame_data1, dtype=np.uint8).reshape((height, width, 3))
+    #     frame2 = np.frombuffer(
+    #         frame_data2, dtype=np.uint8).reshape((height, width, 3))
+    #     if frame1.shape != frame2.shape:
+    #         print("Arrays have different shapes.")
+    #         return
+    #     differences = np.where(frame1 != frame2)
+    #     num_differences = differences[0].size
 
-    def get_rgb_frame_match(self, rgb_path, frame_num, query_path, query_frame_count, start_time):
-        query_path_parts = query_path.split('/')
+    #     if num_differences == 0:
+    #         print("Arrays are identical.")
+    #     else:
+    #         print(f"Arrays differ in {num_differences} elements.")
+    #         # for index in zip(*differences):
+    #         #     print(f"Difference at index {index}: {frame1[index]} != {frame2[index]}")
+    #     image = Image.fromarray(frame2.astype('uint8'), 'RGB')
+    #     image.save(filename1)
+    #     image = Image.fromarray(frame1.astype('uint8'), 'RGB')
+    #     image.save(filename2)
+    #     return frame2
+
+
+    def get_rgb_frame_match(self, video_rgb_path, frame_num, query_rgb_path, query_frame_count, search_start_time, search_interval=85):
+        # TODO(L): Add query rgb file path
+        query_path_parts = query_rgb_path.split('/')
         query_path_parts = query_path_parts[:-2] + ['Queries/RGBs'] + [
             query_path_parts[-1].split('.')[0] + '.rgb']
-        query_path = '/'.join(query_path_parts)
+        query_rgb_path = '/'.join(query_path_parts)
 
-        start_query = self.get_frame_data(query_path, 0)
-        end_query = self.get_frame_data(query_path, query_frame_count-1)
-        start_frame_number = int(start_time * 30)
-        end_frame_number = start_frame_number + query_frame_count
-        max_end_frame_number = int((start_time + 85) * 30)
+        query_start_frame = self.get_frame_data(query_rgb_path, 0)
+        query_end_frame = self.get_frame_data(query_rgb_path, query_frame_count-1)
 
+        start_frame_number = int(search_start_time * 30)
+        end_frame_number = start_frame_number + query_frame_count-1
+        max_end_frame_number = int((search_start_time + search_interval) * 30)
+
+        # query_start = self.get_frame_data(query_rgb_path, query_frame_count-1)
+        # for i in range(8729, 8732):
+        #     print(f"0 vs {i}")
+        #     compare_frame = self.get_frame_data(video_rgb_path, i)
+        #     self.print_array_differences(query_start, compare_frame, f'video1_image_frame_{i}.png', f'query_image_frame{i}_0.png')
+
+        ## Below code picks a random frame in the query and matches that with the frame in window
+        # random_mid_frame_num = random.randint(0, query_frame_count-1)
+        # query_mid_frame = self.get_frame_data(query_rgb_path, random_mid_frame_num)
+        # print(random_mid_frame_num)
+        # print(start_frame_number, end_frame_number)
+        # while end_frame_number <= max_end_frame_number:
+        #     start_video_frame = self.get_frame_data(
+        #         video_rgb_path, start_frame_number)
+        #     end_video_frame = self.get_frame_data(video_rgb_path, end_frame_number)
+        #     mid_video_frame = self.get_frame_data(video_rgb_path, start_frame_number + random_mid_frame_num)
+        #     # print((start_frame_number, end_frame_number))
+        #     if self.compare_frame_hashes_rgb(start_video_frame, query_start_frame):
+        #         if self.compare_frame_hashes_rgb(mid_video_frame, query_mid_frame):
+        #             print((start_frame_number, end_frame_number))
+        #             if self.compare_frame_hashes_rgb(end_video_frame, query_end_frame):
+        #                 return start_frame_number
+
+        #     start_frame_number += 1
+        #     end_frame_number += 1
+        # return None
+    
         while end_frame_number <= max_end_frame_number:
             start_video_frame = self.get_frame_data(
-                rgb_path, start_frame_number)
-            end_video_frame = self.get_frame_data(rgb_path, end_frame_number)
+                video_rgb_path, start_frame_number)
+            end_video_frame = self.get_frame_data(video_rgb_path, end_frame_number)
             # print((start_frame_number, end_frame_number))
-            if self.compare_frame_hashes_rgb(start_video_frame, start_query):
-                if self.compare_frame_hashes_rgb(end_video_frame, end_query):
+            if self.compare_frame_hashes_rgb(start_video_frame, query_start_frame):
+                print((start_frame_number, end_frame_number))
+                if self.compare_frame_hashes_rgb(end_video_frame, query_end_frame):
                     return start_frame_number
 
             start_frame_number += 1
             end_frame_number += 1
-
         return None
 
     def convert_to_min_sec_millisec(self, time_in_seconds):
@@ -155,8 +162,8 @@ class QueryFrameMatcher:
     def find_query(self, query_path, matched_chunk):
         start_time_search = time.time()
 
-        video_path = os.path.join(
-            self.videos_dir, matched_chunk['video'].split('.')[0] + '.mp4')
+        # video_path = os.path.join(
+        #     self.videos_dir, matched_chunk['video'].split('.')[0] + '.mp4')
 
         first_frame, last_frame, frame_count = self.extract_frames_and_count(
             query_path)
@@ -191,3 +198,56 @@ class QueryFrameMatcher:
         time_taken = end_time_search - start_time_search
         print(f"Time taken for frame matching: {time_taken:.5f} seconds")
         return exact_time_rgb
+    
+    # def find_matching_window_1(self, main_video_path, start_time, target_start_frame, target_end_frame, window_size, interval=30):
+    #     print("Started searching for frame at " + str(start_time))
+    #     cap = cv2.VideoCapture(main_video_path)
+    #     cap2 = cv2.VideoCapture(main_video_path)
+    #     fps = cap.get(cv2.CAP_PROP_FPS)
+
+    #     start_frame_number = int(start_time * fps)
+    #     end_frame_number = int((start_time + interval) * fps)
+
+    #     cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame_number)
+
+    #     start_pointer = 0
+    #     end_pointer = 0
+    #     frames = []
+    #     frame_counter = 0
+
+    #     while True:
+    #         ret, frame = cap.read()
+    #         if not ret or cap.get(cv2.CAP_PROP_POS_FRAMES) > end_frame_number:
+    #             break
+
+    #         frame_counter += 1
+    #         frames.append(frame)
+
+    #         end_pointer += 1
+    #         if end_pointer - start_pointer > window_size:
+    #             frames.pop(0)
+    #             start_pointer += 1
+
+    #         if end_pointer - start_pointer == window_size:
+    #             matched_start = self.compare_frame_hashes(
+    #                 frames[0], target_start_frame)
+    #             if matched_start:
+    #                 matched_end = self.compare_frame_hashes(
+    #                     frames[-1], target_end_frame)
+    #                 if matched_end:
+    #                     exact_time = (start_frame_number + start_pointer) / fps
+    #                     cap.release()
+    #                     return exact_time, start_frame_number + start_pointer
+
+    #     cap.release()
+    #     return None, None
+
+    
+    # def compare_frame_hashes(self, frame_data1, frame_data2):
+    #     frame1_image = Image.fromarray(frame_data1)
+    #     frame2_image = Image.fromarray(frame_data2)
+
+    #     hash1 = imagehash.average_hash(frame1_image, hash_size=16)
+    #     hash2 = imagehash.average_hash(frame2_image, hash_size=16)
+
+    #     return hash1 == hash2
