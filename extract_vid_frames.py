@@ -41,20 +41,27 @@ def extract_frames(video_path, o_path_first, o_path_last):
 def scenes_to_frames(scene_folder_name, frame_folder_name):
     # folder_name = "Scenes/Video_"+str(i)+"_Scenes/"
     frame_folder_name = "Frames/" + frame_folder_name
+    
+    if not os.path.exists(frame_folder_name):
+        os.makedirs(frame_folder_name)
+
     video_list = os.listdir(scene_folder_name)
     video_list.sort()
 
     for file in video_list:
+        file_name = file.split('.')[0]
         # Output paths for first and last frames
-        output_path_first = frame_folder_name + file + "_first_frame.png"
-        output_path_last = frame_folder_name + file + "_last_frame.png"
+        output_path_first = os.path.join(frame_folder_name, file_name) + "_first_frame.png"
+        output_path_last = os.path.join(frame_folder_name, file_name) + "_last_frame.png"
 
         # Extract frames from the video
-        extract_frames(scene_folder_name + file, output_path_first, output_path_last)
+        extract_frames(os.path.join(scene_folder_name,file), output_path_first, output_path_last)
 
         # Convert frames to .rgb format
         convert_to_rgb(output_path_first, "first_frame.rgb")
         convert_to_rgb(output_path_last, "last_frame.rgb")
 
 
-scenes_to_frames("Scenes/Video_1_Scenes", "Video_1_Frames")
+scenes_to_frames("Scenes/Video_1_scenes", "Video_1_Frames")
+scenes_to_frames("Scenes/Video_6_scenes", "Video_6_Frames")
+scenes_to_frames("Scenes/Video_11_scenes", "Video_11_Frames")

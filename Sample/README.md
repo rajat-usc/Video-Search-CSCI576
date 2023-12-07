@@ -10,3 +10,11 @@ Relevant queries:
 11: 4:31 - 4:51
 11: 6:20 - 6:40
 20: 7:47 - 8:17
+
+Steps:
+
+- videos in video folder
+- generate scenes in scene folder
+- generate queries in query folder
+- generate audio for scenes and queries
+- match query audio with video/scene audio

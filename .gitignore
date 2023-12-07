@@ -6,5 +6,12 @@ Audios/*
 Sample/Query/Scene/*
 Sample/Query/*.mp4
 Sample/Query/*.wav
+Frames/*
+Sample/Query/*
 Sample/Scene/*
 Sample/Video/*
+_Frames/*
+_Scenes/*
+*.pyc
+.DS_Store
+.DS_Store

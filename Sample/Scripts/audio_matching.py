@@ -31,7 +31,13 @@ def audio_match(query: AudioFile, video: AudioFile) -> tuple[int, int]:
     ratio: float = 0.05
     stride: int = int(ratio * window)
 
-    assert window <= video.length
+    try:
+        assert window <= video.length
+    except AssertionError as e:
+        print(f" window is larger than video : {(window - video.length)/video.fs}s")
+        print(e)
+        exit(0)
+
     x = 0
     min_distance = np.inf
     frame = 0
@@ -39,25 +45,37 @@ def audio_match(query: AudioFile, video: AudioFile) -> tuple[int, int]:
     pbar = tqdm(total=(video.length - window) // stride)
 
     while x <= (video.length - window):
-        search_window = video.audio[x : x + window]
-        distance = np.linalg.norm(search_window - query.audio)
-        # distance = l2(search_window, query.audio)
-        if distance < min_distance:
-            min_distance = distance
-            frame = x
-        x += stride
-        pbar.update(1)
+        try:
+            search_window = video.audio[x : x + window]
+            distance = np.linalg.norm(search_window - query.audio)
+            # distance = l2(search_window, query.audio)
+            if distance < min_distance:
+                min_distance = distance
+                frame = x
+            x += stride
+            pbar.update(1)
+        except ValueError as e:
+            print(e)
     pbar.close()
-    # print(f" {min_distance=}  {frame=}  timestamp={frame/video.fs}")
 
-    granularity = stride // 100
-    for c in tqdm(range(frame - granularity, frame + granularity)):
-        search_window = video.audio[c : c + window]
-        distance = np.linalg.norm(search_window - query.audio)
-        # distance = l2(search_window, query.audio)
-        if distance < min_distance:
-            min_distance = distance
-            frame = c
+    print(f" first pass frame {frame}")
+    granularity = stride // 200
+    print(f"{granularity=}")
+
+    for c in tqdm(
+        range(
+            max(frame - granularity, 0), min(frame + granularity, video.length - window)
+        )
+    ):
+        try:
+            search_window = video.audio[c : c + window]
+            distance = np.linalg.norm(search_window - query.audio)
+            # distance = l2(search_window, query.audio)
+            if distance < min_distance:
+                min_distance = distance
+                frame = c
+        except Exception as e:
+            pass
 
     start, end = (frame / video.fs), ((frame + window) / video.fs)
     start_frame, end_frame = start * 30, end * 30
@@ -74,9 +92,9 @@ def main():
     # query_path = os.path.join(
     #     constants.queries_folder, "Scene", "video1 - 5550 - Scene 003.wav"
     # )
-    query_path = os.path.join(constants.queries_folder, "video11 - 11400.wav")
-    # video_path = os.path.join(constants.queries_folder, "video1 - 5550.wav")
-    video_path = os.path.join(constants.video_folder, "video11.wav")
+    query_path = os.path.join(constants.queries_folder, "video3 - 11550.wav")
+    # video_path = os.path.join(constants.video_folder, "video4.wav")
+    video_path = os.path.join(constants.scene_folder, "video3 - Scene 070.wav")
 
     # Audio objects
     query = AudioFile(query_path)
