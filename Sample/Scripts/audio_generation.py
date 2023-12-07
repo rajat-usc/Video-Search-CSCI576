@@ -19,7 +19,7 @@ def convert_video_to_audio_ffmpeg(video_file, output_ext="wav"):
 def main():
     """generates audio for all videos in video_folder"""
     start = perf_counter()
-    video_folder = constants.scene_folder
+    video_folder = os.path.join(constants.queries_folder)
 
     print(f" GENERATING AUDIO FOR VIDEOS : {video_folder}")
     for video in tqdm(os.listdir(video_folder)):
