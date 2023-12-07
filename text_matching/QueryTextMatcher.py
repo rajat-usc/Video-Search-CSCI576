@@ -65,7 +65,7 @@ class QueryTextMatcher:
 
     def convert_to_seconds(self, time_str):
         parts = time_str.split(':')
-
+        
         hours, minutes, seconds = map(float, parts)
         total_seconds = (hours * 3600) + minutes * 60 + seconds
         return total_seconds

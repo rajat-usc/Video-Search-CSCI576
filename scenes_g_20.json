@@ -1,0 +1,376 @@
+[
+    {
+        "video_name": "video17",
+        "durations": []
+    },
+    {
+        "video_name": "video15",
+        "durations": []
+    },
+    {
+        "video_name": "video2",
+        "durations": [
+            {
+                "start_time": "0:4:29",
+                "end_time": "0:4:51"
+            },
+            {
+                "start_time": "0:7:42",
+                "end_time": "0:8:19"
+            }
+        ]
+    },
+    {
+        "video_name": "video19",
+        "durations": []
+    },
+    {
+        "video_name": "video19",
+        "durations": []
+    },
+    {
+        "video_name": "video6",
+        "durations": [
+            {
+                "start_time": "0:1:37",
+                "end_time": "0:2:2"
+            },
+            {
+                "start_time": "0:2:24",
+                "end_time": "0:3:27"
+            },
+            {
+                "start_time": "0:3:26",
+                "end_time": "0:4:6"
+            },
+            {
+                "start_time": "0:4:19",
+                "end_time": "0:5:14"
+            },
+            {
+                "start_time": "0:5:13",
+                "end_time": "0:5:43"
+            },
+            {
+                "start_time": "0:5:42",
+                "end_time": "0:6:54"
+            },
+            {
+                "start_time": "0:6:53",
+                "end_time": "0:7:17"
+            },
+            {
+                "start_time": "0:8:44",
+                "end_time": "0:9:17"
+            },
+            {
+                "start_time": "0:9:16",
+                "end_time": "0:9:49"
+            },
+            {
+                "start_time": "0:9:53",
+                "end_time": "0:10:26"
+            },
+            {
+                "start_time": "0:10:38",
+                "end_time": "0:11:1"
+            },
+            {
+                "start_time": "0:11:14",
+                "end_time": "0:12:11"
+            },
+            {
+                "start_time": "0:12:51",
+                "end_time": "0:13:23"
+            }
+        ]
+    },
+    {
+        "video_name": "video11",
+        "durations": [
+            {
+                "start_time": "0:6:6",
+                "end_time": "0:6:33"
+            }
+        ]
+    },
+    {
+        "video_name": "video13",
+        "durations": [
+            {
+                "start_time": "0:0:0",
+                "end_time": "0:0:43"
+            },
+            {
+                "start_time": "0:4:41",
+                "end_time": "0:5:4"
+            },
+            {
+                "start_time": "0:13:8",
+                "end_time": "0:13:33"
+            }
+        ]
+    },
+    {
+        "video_name": "video8",
+        "durations": [
+            {
+                "start_time": "0:8:45",
+                "end_time": "0:9:8"
+            }
+        ]
+    },
+    {
+        "video_name": "video4",
+        "durations": [
+            {
+                "start_time": "0:0:31",
+                "end_time": "0:1:8"
+            },
+            {
+                "start_time": "0:13:25",
+                "end_time": "0:13:57"
+            },
+            {
+                "start_time": "0:15:32",
+                "end_time": "0:16:43"
+            }
+        ]
+    },
+    {
+        "video_name": "video20",
+        "durations": [
+            {
+                "start_time": "0:0:47",
+                "end_time": "0:1:10"
+            },
+            {
+                "start_time": "0:9:7",
+                "end_time": "0:9:29"
+            }
+        ]
+    },
+    {
+        "video_name": "video1",
+        "durations": [
+            {
+                "start_time": "0:0:0",
+                "end_time": "0:3:15"
+            },
+            {
+                "start_time": "0:3:18",
+                "end_time": "0:10:15"
+            },
+            {
+                "start_time": "0:10:14",
+                "end_time": "0:11:52"
+            },
+            {
+                "start_time": "0:11:51",
+                "end_time": "0:12:22"
+            },
+            {
+                "start_time": "0:12:21",
+                "end_time": "0:13:8"
+            },
+            {
+                "start_time": "0:13:7",
+                "end_time": "0:15:13"
+            },
+            {
+                "start_time": "0:15:12",
+                "end_time": "0:15:55"
+            }
+        ]
+    },
+    {
+        "video_name": "video16",
+        "durations": [
+            {
+                "start_time": "0:2:23",
+                "end_time": "0:3:57"
+            },
+            {
+                "start_time": "0:3:56",
+                "end_time": "0:4:54"
+            },
+            {
+                "start_time": "0:7:27",
+                "end_time": "0:9:17"
+            },
+            {
+                "start_time": "0:9:23",
+                "end_time": "0:10:12"
+            }
+        ]
+    },
+    {
+        "video_name": "video14",
+        "durations": []
+    },
+    {
+        "video_name": "video18",
+        "durations": []
+    },
+    {
+        "video_name": "video3",
+        "durations": [
+            {
+                "start_time": "0:0:41",
+                "end_time": "0:1:16"
+            },
+            {
+                "start_time": "0:1:15",
+                "end_time": "0:1:57"
+            },
+            {
+                "start_time": "0:6:21",
+                "end_time": "0:6:48"
+            },
+            {
+                "start_time": "0:7:57",
+                "end_time": "0:8:20"
+            },
+            {
+                "start_time": "0:8:19",
+                "end_time": "0:8:50"
+            }
+        ]
+    },
+    {
+        "video_name": "video7",
+        "durations": []
+    },
+    {
+        "video_name": "video10",
+        "durations": [
+            {
+                "start_time": "0:0:0",
+                "end_time": "0:0:31"
+            },
+            {
+                "start_time": "0:1:23",
+                "end_time": "0:1:52"
+            },
+            {
+                "start_time": "0:2:58",
+                "end_time": "0:3:21"
+            },
+            {
+                "start_time": "0:3:20",
+                "end_time": "0:3:46"
+            },
+            {
+                "start_time": "0:3:55",
+                "end_time": "0:4:22"
+            },
+            {
+                "start_time": "0:5:16",
+                "end_time": "0:5:41"
+            },
+            {
+                "start_time": "0:5:52",
+                "end_time": "0:6:16"
+            },
+            {
+                "start_time": "0:9:18",
+                "end_time": "0:9:47"
+            },
+            {
+                "start_time": "0:10:4",
+                "end_time": "0:10:33"
+            },
+            {
+                "start_time": "0:12:23",
+                "end_time": "0:12:44"
+            },
+            {
+                "start_time": "0:12:55",
+                "end_time": "0:13:38"
+            }
+        ]
+    },
+    {
+        "video_name": "video9",
+        "durations": [
+            {
+                "start_time": "0:2:22",
+                "end_time": "0:3:5"
+            },
+            {
+                "start_time": "0:3:4",
+                "end_time": "0:4:5"
+            },
+            {
+                "start_time": "0:4:4",
+                "end_time": "0:5:41"
+            }
+        ]
+    },
+    {
+        "video_name": "video12",
+        "durations": [
+            {
+                "start_time": "0:0:0",
+                "end_time": "0:0:50"
+            },
+            {
+                "start_time": "0:1:22",
+                "end_time": "0:2:16"
+            },
+            {
+                "start_time": "0:2:15",
+                "end_time": "0:4:23"
+            },
+            {
+                "start_time": "0:4:24",
+                "end_time": "0:4:46"
+            },
+            {
+                "start_time": "0:4:45",
+                "end_time": "0:5:20"
+            },
+            {
+                "start_time": "0:5:19",
+                "end_time": "0:7:33"
+            },
+            {
+                "start_time": "0:8:2",
+                "end_time": "0:8:55"
+            }
+        ]
+    },
+    {
+        "video_name": "video5",
+        "durations": [
+            {
+                "start_time": "0:1:10",
+                "end_time": "0:1:41"
+            },
+            {
+                "start_time": "0:2:18",
+                "end_time": "0:2:44"
+            },
+            {
+                "start_time": "0:3:46",
+                "end_time": "0:4:14"
+            },
+            {
+                "start_time": "0:4:45",
+                "end_time": "0:5:13"
+            },
+            {
+                "start_time": "0:5:13",
+                "end_time": "0:5:45"
+            },
+            {
+                "start_time": "0:8:2",
+                "end_time": "0:8:24"
+            },
+            {
+                "start_time": "0:9:36",
+                "end_time": "0:10:7"
+            }
+        ]
+    }
+]
