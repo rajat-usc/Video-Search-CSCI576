@@ -7,11 +7,15 @@ Sample/Query/Scene/*
 Sample/Query/*.mp4
 Sample/Query/*.wav
 Frames/*
+RGBs/*
 Sample/Query/*
 Sample/Scene/*
 Sample/Video/*
 _Frames/*
 _Scenes/*
 *.pyc
+*.rgb
+*.png
+*.jpg
 .DS_Store
-.DS_Store
+

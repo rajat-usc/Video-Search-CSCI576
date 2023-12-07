@@ -65,7 +65,7 @@ class QueryTextMatcher:
 
     def convert_to_seconds(self, time_str):
         parts = time_str.split(':')
-
+        
         hours, minutes, seconds = map(float, parts)
         total_seconds = (hours * 3600) + minutes * 60 + seconds
         return total_seconds
@@ -106,8 +106,11 @@ class QueryTextMatcher:
 
     def find_query(self, query_path, matched_scenes={}, use_pretranscribed_query=True):
         # print(matched_scenes)
+        start_time_transcript = time.time()
         query_text = self.transcribe_query(
             query_path, use_pretranscribed_query)
+        end_time_transcript = time.time()
+        print(f"Time taken for trascription: {(end_time_transcript - start_time_transcript):.5f} seconds")
         if query_text:
             start_time_itr = time.time()
             res = self.find_text(query_text, matched_scenes)
