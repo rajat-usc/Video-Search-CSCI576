@@ -3,6 +3,7 @@ import sys
 import time
 import json
 from PyQt5.QtWidgets import QApplication
+import shutil
 
 from consecutive_matching import get_video_clip
 from text_matching.QueryTextMatcher import QueryTextMatcher
@@ -21,7 +22,7 @@ def read_scene_greater_than_20():
     except FileNotFoundError:
         return {}
 
-def process_video(mp4_file, wav_file, rgb_file):
+def process_video(mp4_file, wav_file, rgb_file, video_num):
     start_processing_time = time.time()
 
     base = os.getcwd()
@@ -33,21 +34,27 @@ def process_video(mp4_file, wav_file, rgb_file):
     frame_matcher = QueryFrameMatcher(video_folder, rgb_folder)
 
     scenes_greater_than_20 = read_scene_greater_than_20()
-    shot_boundary_res = get_video_clip(mp4_file, './Frames/Video_1_Frames/')
+    shot_boundary_res = get_video_clip(mp4_file, f'./Frames/Video_{video_num}_Frames/')
+    # print('Shot Boundary: ', shot_boundary_res)
+
+    if shot_boundary_res:
+        for key, value in shot_boundary_res.items():
+            for item in value:
+                if 'Timecode' in item[0]:
+                    shot_boundary_res = {}
 
     shot_found = bool(shot_boundary_res)
     if not shot_found:
         shot_boundary_res = scenes_greater_than_20
 
     matched_chunk = text_matcher.find_query(wav_file, shot_boundary_res)
-    print(matched_chunk)
+    # print('Text matching: ', matched_chunk)
 
     # TODO: Audio matching if no text match
     start_frame = None
     if not matched_chunk and shot_found:
         # Assuming that shot boundary exists in query and no text was found
         for video_name, intervals in shot_boundary_res.items():
-            print(video_name)
             for interval in intervals:
                 matched_chunk = {
                     'video': video_name,
@@ -68,7 +75,8 @@ def process_video(mp4_file, wav_file, rgb_file):
     if matched_chunk:
         filename = os.path.join(video_folder, matched_chunk['video'] + '.mp4')
         start_time = start_frame / 30  # Assuming 30 FPS
-        play_video(filename, start_time, start_frame)
+        print(filename, start_time, start_frame)
+        # play_video(filename, start_time, start_frame)
 
     end_processing_time = time.time()
     print(f"Time taken for total processing: {(end_processing_time - start_processing_time):.5f} seconds")
@@ -88,8 +96,29 @@ if __name__ == "__main__":
     mp4_file = sys.argv[1]
     wav_file = sys.argv[2]
     rgb_file = sys.argv[3] 
+    
+    queries_list = os.listdir('./Queries')
+    for query_mp4 in queries_list:
+        if '.DS_Store' not in query_mp4 and 'skip' not in query_mp4 and 'audios' not in query_mp4 and 'RGBs' not in query_mp4 and '11_2' not in query_mp4:
+            print(query_mp4)
+            mp4_file = './Queries/' + query_mp4
+            query_name = query_mp4.split('.')[0]
+            wav_file = './Queries/audios/' + query_name + '.wav'
+            video_num = query_name.split('_')[0][5:]
+            if os.path.exists('./RGBs/' + 'video' + video_num + '.rgb'):
+                if os.path.exists('_Scenes') and os.path.exists('_Frames'):
+                    shutil.rmtree('_Frames')
+                    shutil.rmtree('_Scenes')
+                process_video(mp4_file, wav_file, rgb_file, video_num)
 
-    mp4_file = './Queries/video1_1.mp4'
-    wav_file = './Queries/audio/video1_1.wav'
 
-    process_video(mp4_file, wav_file, rgb_file)
+    # mp4_file = f'./Queries/video1_1.mp4'
+    # wav_file = './Queries/audios/video1_1.wav'
+
+    # if os.path.exists('_Scenes') and os.path.exists('_Frames'):
+    #     shutil.rmtree('_Frames')
+    #     shutil.rmtree('_Scenes')
+
+    # process_video(mp4_file, wav_file, rgb_file)
+
+
