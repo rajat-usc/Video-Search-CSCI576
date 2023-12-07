@@ -15,8 +15,8 @@ def main():
 
     app = QApplication(sys.argv)
 
-    mp4_file = './Queries/video6_1.mp4'
-    wav_file = './Queries/audio/video6_1.wav'
+    mp4_file = './Queries/video6_2.mp4'
+    wav_file = './Queries/audio/video6_2.wav'
     rgb_file = ''
 
     start_processing_time = time.time()
@@ -28,19 +28,6 @@ def main():
     frames_folder = os.path.join(base, "Frames")
     text_matcher = QueryTextMatcher()
     frame_matcher = QueryFrameMatcher(video_folder, rgb_folder)
-
-    # queries = os.listdir(queries_folder)
-    # for query in queries:
-    #     if query.endswith('.mp4'):
-    #         print(query)
-    #         video_num = int(query.split('/')[-1].split('.')[0][-1])
-    #         if os.path.exists(f'./Frames/Video_{video_num}_Frames'):
-    #             shot_boundary_res = get_video_clip('./Queries/' + query, './Frames/Video_1_Frames/')
-    #         matched_chunk = text_matcher.find_query('./Queries/audio/' + query.split('.')[0] + '.wav', shot_boundary_res)
-    #         print(matched_chunk)
-    #         if matched_chunk:
-    #             frame_matcher.find_query('./Queries/' + query, matched_chunk)
-
     
     shot_boundary_res = get_video_clip(mp4_file, './Frames/Video_6_Frames/')
     # TODO(L): if not shot_boundary_res, set shot_boundary_res to scenes > 20
@@ -48,7 +35,6 @@ def main():
     # print(matched_chunk)
 
     # TODO: if not matched_chunk, add audio matching
-
     startFrame = frame_matcher.find_query(mp4_file, matched_chunk)
 
     startTime = startFrame / 30 # 30 is the FPS
