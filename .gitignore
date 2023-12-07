@@ -3,6 +3,8 @@ __pycache__/*
 Queries/*
 Scenes/*
 Audios/*
-Sample/Query/*
+Sample/Query/Scene/*
+Sample/Query/*.mp4
+Sample/Query/*.wav
 Sample/Scene/*
 Sample/Video/*
