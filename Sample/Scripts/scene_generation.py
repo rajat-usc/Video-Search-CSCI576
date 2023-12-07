@@ -10,6 +10,8 @@ def generate_scenes(video_folder: str, dest_folder: str) -> int:
     result = 1
 
     for video in os.listdir(video_folder):
+        if not video.endswith("mp4"):
+            continue
         video_path = os.path.join(video_folder, video)
         scene_list = detect(video_path, AdaptiveDetector())
         print(f" {video} : {len(scene_list)}")
@@ -29,7 +31,9 @@ def generate_scenes(video_folder: str, dest_folder: str) -> int:
 
 def main():
     start = perf_counter()
-    result = generate_scenes(constants.video_folder, constants.scene_folder)
+    result = generate_scenes(
+        constants.queries_folder, os.path.join(constants.queries_folder, "Scene")
+    )
     end = perf_counter()
     runtime = end - start
 
