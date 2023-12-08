@@ -53,10 +53,12 @@ def main():
 
     # query video -> mp4 to rgb -> get anchor frames
     query_processing.start()
-    query_name = "video20_2.mp4"
-    query_path = os.path.join(constants.query_path, query_name)
-    query_rgb_path = mp4_to_rgb(query_path)
-    # query_rgb_path = os.path.join(constants.query_path, query_name)
+    query_name = "video3_1.mp4"
+    if(query_name.endswith("mp4")):
+        query_path = os.path.join(constants.query_path, query_name)
+        query_rgb_path = mp4_to_rgb(query_path)
+    else:
+        query_rgb_path = os.path.join(constants.query_path, query_name)
     query = RGBVideo(query_rgb_path)
     query_processing.end()
     print(query.frames)
