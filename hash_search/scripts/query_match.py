@@ -34,25 +34,6 @@ def create_connection(db_file):
 
     return conn
 
-    height = 288
-    width = 352
-    frame_bytes = 304_128
-    # query_frame = query.anchor[0]
-
-    b = video.read()
-    query_frame = b[frame_bytes : 2 * frame_bytes]
-    x = 0
-    c = 0
-    while x < len(b):
-        frame = b[x : x + frame_bytes]
-        a = np.frombuffer(frame, dtype=np.uint8).reshape((height, width, 3))
-        b = np.frombuffer(query_frame, dtype=np.uint8).reshape((height, width, 3))
-        if np.array_equal(a, b):
-            print(f"success : {c + 1}")
-
-        x += frame_bytes
-        c += 1
-
 
 # ffmpeg -ss 00:07:47 -i video\video20.mp4 -t 30 -c copy query\video20_2.mp4
 def main():
