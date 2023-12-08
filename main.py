@@ -4,10 +4,12 @@ import time
 import json
 from PyQt5.QtWidgets import QApplication
 
-from consecutive_matching import get_video_clip
+from consecutive_matching import get_video_clip, query_preprocesing
 from text_matching.QueryTextMatcher import QueryTextMatcher
 from frame_matching.QueryFrameMatcher import QueryFrameMatcher
+import frame_matching.backupQueryFrameMatcher as backupFrameMatcher
 from media_player_1 import VideoPlayer
+from shot_boundary.QueryShotBoundary import QueryShotBoundary
 
 def convert_to_seconds(time_str):
     hours, minutes, seconds = map(float, time_str.split(':'))
@@ -31,13 +33,25 @@ def process_video(mp4_file, wav_file, rgb_file):
 
     text_matcher = QueryTextMatcher()
     frame_matcher = QueryFrameMatcher(video_folder, rgb_folder)
+    shot_boundary_detector = QueryShotBoundary(mp4_file.split('.mp4')[0])
 
-    scenes_greater_than_20 = read_scene_greater_than_20()
-    shot_boundary_res = get_video_clip(mp4_file, './Frames/Video_1_Frames/')
 
-    shot_found = bool(shot_boundary_res)
+    shot_boundary_res = None
+    shot_found = False
+    frames_folders = os.listdir(frames_folder)
+    frames_folders.sort()
+    for folder in frames_folders:
+        # shot_boundary_res = get_video_clip(query_frame_list, os.path.join(os.getcwd(), 'Frames', folder))
+        print(folder)
+        shot_boundary_res = shot_boundary_detector.get_video_clip(os.path.join(os.getcwd(), 'Frames', folder))
+        if shot_boundary_res:
+            print("Shot Boundary: ", shot_boundary_res)
+            shot_found = True
+            break
+    
     if not shot_found:
-        shot_boundary_res = scenes_greater_than_20
+        print("Shot Boundary: ", shot_boundary_res)
+        shot_boundary_res = read_scene_greater_than_20()
 
     matched_chunk = text_matcher.find_query(wav_file, shot_boundary_res)
     print(matched_chunk)
@@ -89,7 +103,7 @@ if __name__ == "__main__":
     wav_file = sys.argv[2]
     rgb_file = sys.argv[3] 
 
-    mp4_file = './Queries/video1_1.mp4'
-    wav_file = './Queries/audio/video1_1.wav'
+    mp4_file = './Queries/video11_1.mp4'
+    wav_file = './Queries/audio/video11_1.wav'
 
     process_video(mp4_file, wav_file, rgb_file)
