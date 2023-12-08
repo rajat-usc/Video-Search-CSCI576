@@ -81,7 +81,7 @@ class QueryTextMatcher:
         return minute, second
 
     # NOTE: use_pretranscribed_query should be set ot False for any queries other than the ones given by TAs
-    def transcribe_query(self, query_path, use_pretranscribed_query=True):
+    def transcribe_query(self, query_path, use_pretranscribed_query):
         if use_pretranscribed_query:
             return self.queries_data[query_path.split('/')[-1].split('.')[0]]
 
@@ -95,7 +95,7 @@ class QueryTextMatcher:
             try:
                 result = self.recognizer.recognize_azure(
                     audio_data, key='390b85c277ec4e638193ca1498b48414', location='eastus')
-                print('query transcription:', result)
+                print('query transcription: ', re.sub(r'[^\w\s]', '', result[0]).lower())
                 return re.sub(r'[^\w\s]', '', result[0]).lower()
 
             except sr.UnknownValueError:
@@ -104,7 +104,7 @@ class QueryTextMatcher:
                 print(f"API request error in {query_path}; {e}")
         return ""
 
-    def find_query(self, query_path, matched_scenes={}, use_pretranscribed_query=True):
+    def find_query(self, query_path, matched_scenes={}, use_pretranscribed_query=False):
         # print(matched_scenes)
         start_time_transcript = time.time()
         query_text = self.transcribe_query(
