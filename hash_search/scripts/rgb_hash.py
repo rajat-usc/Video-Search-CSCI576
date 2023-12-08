@@ -118,7 +118,7 @@ def main():
     print(f" success : {end-start:.2f}")
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     # total bytes : 5_675_332_608
     # width : 352
     # height : 288
@@ -127,4 +127,4 @@ if __name__ == "__main__":
     # frame bytes : 304_128
     # number of frames : 18_661
 
-    main()
+    # main()
