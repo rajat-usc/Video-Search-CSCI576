@@ -105,12 +105,12 @@ def load_data(data_folder: str):
 def main():
     start = perf_counter()
 
-    # for f in tqdm(os.listdir(constants.rgb_path)):
-    #     rgb_video_path = os.path.join(constants.rgb_path, f)
-    #     rgb_video = RGBVideo(rgb_video_path)
-    #     print(f"frames : {rgb_video.frames}")
+    for f in tqdm(os.listdir(constants.rgb_path)):
+        rgb_video_path = os.path.join(constants.rgb_path, f)
+        rgb_video = RGBVideo(rgb_video_path)
+        print(f"frames : {rgb_video.frames}")
 
-    #     csv_video_hash(rgb_video)
+        csv_video_hash(rgb_video)
 
     load_data(constants.data_path)
 
