@@ -109,54 +109,13 @@ class QueryFrameMatcher:
         return frame2
 
 
-    def get_rgb_frame_match(self, video_rgb_path, frame_num, query_rgb_path, query_frame_count, search_start_time, search_interval=85):
-        query_path_parts = query_rgb_path.split('/')
-        query_path_parts = query_path_parts[:-2] + ['Queries/RGBs'] + [
-            query_path_parts[-1].split('.')[0] + '.rgb']
-        query_rgb_path = '/'.join(query_path_parts)
+    def get_rgb_frame_match(self, video_rgb_path, query_rgb_path, query_frame_count, search_start_time, search_interval=85):
         print(video_rgb_path, query_rgb_path)
         query_start_frame = self.get_frame_data(query_rgb_path, 0)
         query_end_frame = self.get_frame_data(query_rgb_path, query_frame_count-1)
         start_frame_number = int(search_start_time * 30)
         end_frame_number = start_frame_number + query_frame_count-1
         max_end_frame_number = int((search_start_time + search_interval) * 30)
-        # print('start_frame_number: ', start_frame_number)
-        # print('end_frame_number: ', end_frame_number)
-        # print('max_end_frame_number: ', max_end_frame_number)
-
-
-        # query_start = self.get_frame_data(query_rgb_path, 0)
-        # for i in range(16199, 16203):
-        #     print(f"0 vs {i}")
-        #     compare_frame = self.get_frame_data(video_rgb_path, i)
-        #     self.print_array_differences(query_start, compare_frame, f'video1_image_frame_{i}_s.png', f'query_image_frame{i}_0.png')
-
-        # query_start = self.get_frame_data(query_rgb_path, query_frame_count-1)
-        # for i in range(6149, 6153):
-        #     print(f"0 vs {i}")
-        #     compare_frame = self.get_frame_data(video_rgb_path, i)
-        #     self.print_array_differences(query_start, compare_frame, f'video1_image_frame_{i}_e.png', f'query_image_frame{i}_1.png')
-
-        ## Below code picks a random frame in the query and matches that with the frame in window
-        # random_mid_frame_num = random.randint(0, query_frame_count-1)
-        # query_mid_frame = self.get_frame_data(query_rgb_path, random_mid_frame_num)
-        # print(random_mid_frame_num)
-        # print(start_frame_number, end_frame_number)
-        # while end_frame_number <= max_end_frame_number:
-        #     start_video_frame = self.get_frame_data(
-        #         video_rgb_path, start_frame_number)
-        #     end_video_frame = self.get_frame_data(video_rgb_path, end_frame_number)
-        #     mid_video_frame = self.get_frame_data(video_rgb_path, start_frame_number + random_mid_frame_num)
-        #     # print((start_frame_number, end_frame_number))
-        #     if self.compare_frame_hashes_rgb(start_video_frame, query_start_frame):
-        #         if self.compare_frame_hashes_rgb(mid_video_frame, query_mid_frame):
-        #             print((start_frame_number, end_frame_number))
-        #             if self.compare_frame_hashes_rgb(end_video_frame, query_end_frame):
-        #                 return start_frame_number
-
-        #     start_frame_number += 1
-        #     end_frame_number += 1
-        # return None
     
         while end_frame_number <= max_end_frame_number:
             start_video_frame = self.get_frame_data(
@@ -215,15 +174,42 @@ class QueryFrameMatcher:
         minute = int(time_in_seconds // 60)
         second = int(time_in_seconds % 60)
         return minute, second
+    
+    def match_rgb_frames(self, query_rgb_path, video_rgb_path, start_frames, end_frames, frames_count):
+        query_start_frame = self.get_frame_data(query_rgb_path, 0)
+        query_end_frame = self.get_frame_data(query_rgb_path, frames_count-1)
 
-    def find_query(self, query_path, matched_chunk):
+        for start_frame in start_frames:
+            start_frame_num = int(start_frame)
+            video_start_frame = self.get_frame_data(video_rgb_path, start_frame_num)
+            if self.compare_frame_array_rgb(video_start_frame, query_start_frame):
+                video_end_frame = self.get_frame_data(video_rgb_path, start_frame_num + frames_count - 1)
+                if self.compare_frame_array_rgb(video_end_frame, query_end_frame):
+                    return start_frame_num
+        
+        for end_frame in end_frames:
+            end_frame_num = int(end_frame)
+            video_end_frame = self.get_frame_data(video_rgb_path, end_frame_num)
+            if self.compare_frame_array_rgb(video_end_frame, query_end_frame):
+                video_start_frame = self.get_frame_data(video_rgb_path, end_frame_num - frames_count + 1)
+                if self.compare_frame_array_rgb(video_start_frame, query_start_frame):
+                    return end_frame_num - frames_count + 1
+        return None
+
+
+    def find_query(self, query_mp4_path, query_rgb_path, hash_matched_chunk = None, matched_chunk = None):
         start_time_search = time.time()
+
+        if hash_matched_chunk:
+            video_rgb_path = os.path.join(self.rgbs_dir, hash_matched_chunk['video_name'] + '.rgb')
+            frame_match = self.match_rgb_frames(query_rgb_path, video_rgb_path, hash_matched_chunk['start_frames'], hash_matched_chunk['end_frames'], int(hash_matched_chunk['frames_count']))
+            return frame_match
 
         # video_path = os.path.join(
         #     self.videos_dir, matched_chunk['video'].split('.')[0] + '.mp4')
 
         first_frame, last_frame, frame_count = self.extract_frames_and_count(
-            query_path)
+            query_mp4_path)
 
         if first_frame is not None:
             cv2.imwrite('query_first_frame.jpg', first_frame)
@@ -234,23 +220,10 @@ class QueryFrameMatcher:
         print("Starting frame search at time " + str(start_time))
         if start_time < 0:
             start_time = 0
-        # try:
-        #     match_time, frame_num = self.find_matching_window_1(
-        #         self.videos_dir + '/' + matched_chunk['video'].split('.')[0] + '.mp4', start_time, first_frame, last_frame, frame_count, 85)
-        # except Exception as e:
-        #     print(e.args)
+
         print(frame_count)
         exact_time_rgb = self.get_rgb_frame_match(os.path.join(self.rgbs_dir, matched_chunk['video'].split('.')[
-                                                  0] + '.rgb'), 0, query_path, frame_count, start_time)
-        # print("Mp4 output: ", frame_num, "RGB output: ", exact_time_rgb)
-
-        # if match_time is not None:
-        #     minute, second = self.convert_to_min_sec_millisec(
-        #         match_time)
-        #     print(
-        #         f"Result found for {query_path} in {matched_chunk['video']} at time: {minute}:{second} at {frame_num}")
-        # else:
-        #     print("Result not found for {query_path}")
+                                                  0] + '.rgb'), query_rgb_path, frame_count, start_time)
 
         end_time_search = time.time()
         time_taken = end_time_search - start_time_search

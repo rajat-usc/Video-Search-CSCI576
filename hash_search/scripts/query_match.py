@@ -34,36 +34,17 @@ def create_connection(db_file):
 
     return conn
 
-
-# ffmpeg -ss 00:07:47 -i video\video20.mp4 -t 30 -c copy query\video20_2.mp4
-def main():
-    mc = Timer("main")
-    query_processing = Timer("query processing")
-    search = Timer("frame search")
-
+def match_frames(query_rgb_path):
     conn = create_connection(constants.DB_NAME)
     if conn is None:
-        print(" database connection failed ")
+        print("database connection failed ")
         exit()
     cur = conn.cursor()
 
     frame_dict: dict = {}
-
-    mc.start()
-
-    # query video -> mp4 to rgb -> get anchor frames
-    query_processing.start()
-    query_name = "video20_2.mp4"
-    query_path = os.path.join(constants.query_path, query_name)
-    query_rgb_path = mp4_to_rgb(query_path)
-    # query_rgb_path = os.path.join(constants.query_path, query_name)
     query = RGBVideo(query_rgb_path)
-    query_processing.end()
     print(query.frames)
 
-    # search db for anchor frames
-    search.start()
-    video_name = ""
     for item, frame in enumerate(query.anchor):
         phash, sha256, _ = query.get_hash(frame)
         result = cur.execute(
@@ -77,22 +58,70 @@ def main():
             frame_dict[item] = []
             video_name = None
 
-    if video_name is None:
-        print(" no frames found")
+    if video_name is None or len(frame_dict.items()) == 0:
+        return None
 
-    print(f" {video_name=}\n {frame_dict=}")
-
-    search.end()
-
-    # return frames
-
-    mc.end()
-
-    print("\n")
-    query_processing.state()
-    search.state()
-    mc.state()
+    return {'video_name': video_name, 'start_frames': frame_dict[0], 'end_frames': frame_dict[1], 'frames_count': query.frames}
 
 
-if __name__ == "__main__":
-    main()
+# ffmpeg -ss 00:07:47 -i video\video20.mp4 -t 30 -c copy query\video20_2.mp4
+# def main():
+#     mc = Timer("main")
+#     query_processing = Timer("query processing")
+#     search = Timer("frame search")
+
+#     conn = create_connection(constants.DB_NAME)
+#     if conn is None:
+#         print(" database connection failed ")
+#         exit()
+#     cur = conn.cursor()
+
+#     frame_dict: dict = {}
+
+#     mc.start()
+
+#     # query video -> mp4 to rgb -> get anchor frames
+#     query_processing.start()
+#     query_name = "video20_2.mp4"
+#     query_path = os.path.join(constants.query_path, query_name)
+#     query_rgb_path = mp4_to_rgb(query_path)
+#     # query_rgb_path = os.path.join(constants.query_path, query_name)
+#     query = RGBVideo(query_rgb_path)
+#     query_processing.end()
+#     print(query.frames)
+
+#     # search db for anchor frames
+#     search.start()
+#     video_name = ""
+#     for item, frame in enumerate(query.anchor):
+#         phash, sha256, _ = query.get_hash(frame)
+#         result = cur.execute(
+#             constants.sql_search_frame, (str(phash), str(sha256))
+#         ).fetchall()
+
+#         if result:
+#             frame_dict[item] = [x[1] for x in result]
+#             video_name = result[0][0]
+#         else:
+#             frame_dict[item] = []
+#             video_name = None
+
+#     if video_name is None:
+#         print(" no frames found")
+
+#     print(f" {video_name=}\n {frame_dict=}")
+
+#     search.end()
+
+#     # return frames
+
+#     mc.end()
+
+#     print("\n")
+#     query_processing.state()
+#     search.state()
+#     mc.state()
+
+
+# if __name__ == "__main__":
+#     main()
