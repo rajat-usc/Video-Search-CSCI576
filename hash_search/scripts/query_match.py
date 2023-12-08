@@ -60,7 +60,7 @@ def match_frames(query_rgb_path):
 
     if video_name is None or len(frame_dict.items()) == 0:
         return None
-
+    video_name = video_name.replace("Video_", "video")
     return {'video_name': video_name, 'start_frames': frame_dict[0], 'end_frames': frame_dict[1], 'frames_count': query.frames}
 
 

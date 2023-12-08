@@ -1,4 +1,5 @@
 import os
+import subprocess
 import sys
 import time
 import json
@@ -39,10 +40,10 @@ def process_video(mp4_file, wav_file, rgb_file):
 
     frame_matcher = QueryFrameMatcher(video_folder, rgb_folder)
 
-    hash_matched_chunk = False#match_frames(rgb_file)
+    hash_matched_chunk = match_frames(rgb_file)
 
     if hash_matched_chunk:
-        start_frame = frame_matcher.find_query(mp4_file, rgb_file, hash_matched_chunk, None)
+        start_frame = frame_matcher.find_query(mp4_file, rgb_file, hash_matched_chunk, None)-1
         print("***********", start_frame)
         if start_frame is not None:
             match_found = True
@@ -118,19 +119,37 @@ def play_video(filename, start_time, start_frame):
     videoplayer.show()
     sys.exit(app.exec_())
 
+def create_rgb_files(input_folder, output_folder):
+    for file in os.listdir(input_folder):
+        if file.endswith(".mp4"):
+            input_file = os.path.join(input_folder, file)
+            output_file = os.path.join(output_folder, f'{file.split(".")[0]}.rgb')
+            subprocess.run(['ffmpeg', '-i', input_file, '-vf', 'format=rgb24', output_file])
+
 if __name__ == "__main__":
     # if len(sys.argv) != 4:
     #     print("Usage: python script.py <mp4_file> <wav_file> <rgb_file>")
     #     sys.exit(1)
+    # python main.py ./Queries/video10_1.mp4 ./Queries/audios/video10_1.wav ./Queries/RGBs/video10_1.rgb
 
-    # mp4_file = sys.argv[1]
-    # wav_file = sys.argv[2]
-    # rgb_file = sys.argv[3]
 
-    mp4_file = './Queries/video1_2.mp4'
-    wav_file = './Queries/audios/video1_2.wav'
-    rgb_file = './Queries/RGBs/video1_2.rgb'
+    input_folder = "./Queries"
+
+    output_folder = "./Queries/RGBs"
+
+    os.makedirs(output_folder, exist_ok=True)
+
+    # create_rgb_files(input_folder, output_folder)
+    mp4_file = sys.argv[1]
+    wav_file = sys.argv[2]
+    rgb_file = sys.argv[3]
+
+    # mp4_file = './Queries/video10_1.mp4'
+    # wav_file = './Queries/audios/video10_1.wav'
+    #
+    # rgb_file = './Queries/RGBs/video10_1.rgb'
     # start_time = time.time()
     process_video(mp4_file, wav_file, rgb_file)
+
     # end_time = time.time()
     # print(f"Time taken for everything: {(end_time - start_time):.5f} seconds")
