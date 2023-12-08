@@ -19,3 +19,7 @@ _Scenes/*
 *.jpg
 .DS_Store
 
+hash_search/*/*.mp4
+hash_search/*/*.csv
+hash_search/*/*.rgb
+hash_search/*.db

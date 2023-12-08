@@ -1,6 +1,6 @@
 import os
 
-base = os.path.join(os.getcwd(), "Video-Search-CSCI576", "Sample")
+base = os.getcwd()
 
 video_folder = os.path.join(base, "Video")
 scene_folder = os.path.join(base, "Scene")
