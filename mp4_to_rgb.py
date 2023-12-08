@@ -9,9 +9,9 @@ def create_rgb_files(input_folder, output_folder):
             subprocess.run(['ffmpeg', '-i', input_file, '-vf', 'format=rgb24', output_file])
 
 def main():
-    input_folder = "./Videos"
+    input_folder = "./Queries"
 
-    output_folder = "./RGBs"
+    output_folder = "./Queries/RGBs"
 
     os.makedirs(output_folder, exist_ok=True)
 

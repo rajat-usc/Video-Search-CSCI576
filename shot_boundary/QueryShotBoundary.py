@@ -146,8 +146,9 @@ class QueryShotBoundary:
             # Record the start time
             start_time = time.time()
             vid_frame_list = os.listdir(video_frames_path)
+            vid_frame_list = [file for file in vid_frame_list if "DS_Store" not in file]
             timecode_csv = [file for file in vid_frame_list if file.endswith("csv")][0]
-            vid_frame_list = [file for file in vid_frame_list if not file.endswith("csv")]
+            vid_frame_list = [file for file in vid_frame_list if not file.endswith("csv") and "DS_Store" not in file]
             vid_frame_list.sort()
             for query_frame in self.query_frame_list:
                 for vid_frame in vid_frame_list:
@@ -167,7 +168,7 @@ class QueryShotBoundary:
             first_frames = defaultdict(list)
             last_frames = defaultdict(list)
             for matched_v_frame, matched_q_frame_list in matched_frames.items():
-                v_frame_number = int(matched_v_frame.split('-')[2].split('_')[0])
+                v_frame_number = int(matched_v_frame.split('-')[2].split('.')[0])
                 for matched_q_frame in matched_q_frame_list:
                     q_frame_number = int(matched_q_frame.split('-')[2].split('.')[0])
                     if "last" in matched_v_frame and "last" in matched_q_frame:

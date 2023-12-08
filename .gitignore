@@ -17,5 +17,5 @@ _Scenes/*
 *.rgb
 *.png
 *.jpg
-.DS_Store
+*.DS_Store*
 

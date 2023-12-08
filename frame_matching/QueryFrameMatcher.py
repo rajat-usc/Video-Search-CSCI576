@@ -114,7 +114,7 @@ class QueryFrameMatcher:
         query_path_parts = query_path_parts[:-2] + ['Queries/RGBs'] + [
             query_path_parts[-1].split('.')[0] + '.rgb']
         query_rgb_path = '/'.join(query_path_parts)
-
+        print(video_rgb_path, query_rgb_path)
         query_start_frame = self.get_frame_data(query_rgb_path, 0)
         query_end_frame = self.get_frame_data(query_rgb_path, query_frame_count-1)
         start_frame_number = int(search_start_time * 30)
@@ -239,7 +239,7 @@ class QueryFrameMatcher:
         #         self.videos_dir + '/' + matched_chunk['video'].split('.')[0] + '.mp4', start_time, first_frame, last_frame, frame_count, 85)
         # except Exception as e:
         #     print(e.args)
-
+        print(frame_count)
         exact_time_rgb = self.get_rgb_frame_match(os.path.join(self.rgbs_dir, matched_chunk['video'].split('.')[
                                                   0] + '.rgb'), 0, query_path, frame_count, start_time)
         # print("Mp4 output: ", frame_num, "RGB output: ", exact_time_rgb)

@@ -104,7 +104,7 @@ class QueryTextMatcher:
                 print(f"API request error in {query_path}; {e}")
         return ""
 
-    def find_query(self, query_path, matched_scenes={}, use_pretranscribed_query=True):
+    def find_query(self, query_path, matched_scenes={}, use_pretranscribed_query=False):
         # print(matched_scenes)
         start_time_transcript = time.time()
         query_text = self.transcribe_query(

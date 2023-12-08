@@ -4,10 +4,10 @@ import time
 import json
 from PyQt5.QtWidgets import QApplication
 
-from consecutive_matching import get_video_clip, query_preprocesing
+# from consecutive_matching import get_video_clip, query_preprocesing
 from text_matching.QueryTextMatcher import QueryTextMatcher
 from frame_matching.QueryFrameMatcher import QueryFrameMatcher
-import frame_matching.backupQueryFrameMatcher as backupFrameMatcher
+# import frame_matching.backupQueryFrameMatcher as backupFrameMatcher
 from media_player_1 import VideoPlayer
 from shot_boundary.QueryShotBoundary import QueryShotBoundary
 
@@ -43,6 +43,8 @@ def process_video(mp4_file, wav_file, rgb_file):
     for folder in frames_folders:
         # shot_boundary_res = get_video_clip(query_frame_list, os.path.join(os.getcwd(), 'Frames', folder))
         print(folder)
+        if "DS_Store" in folder:
+            continue
         shot_boundary_res = shot_boundary_detector.get_video_clip(os.path.join(os.getcwd(), 'Frames', folder))
         if shot_boundary_res:
             print("Shot Boundary: ", shot_boundary_res)
@@ -54,7 +56,7 @@ def process_video(mp4_file, wav_file, rgb_file):
         shot_boundary_res = read_scene_greater_than_20()
 
     matched_chunk = text_matcher.find_query(wav_file, shot_boundary_res)
-    print(matched_chunk)
+    print("Matched chunk", matched_chunk)
 
     # TODO: Audio matching if no text match
     start_frame = None
@@ -81,11 +83,13 @@ def process_video(mp4_file, wav_file, rgb_file):
     
     if matched_chunk:
         filename = os.path.join(video_folder, matched_chunk['video'] + '.mp4')
+        print(start_frame)
         start_time = start_frame / 30  # Assuming 30 FPS
+        end_processing_time = time.time()
+        print(f"Time taken for total processing: {(end_processing_time - start_processing_time):.5f} seconds")
         play_video(filename, start_time, start_frame)
 
-    end_processing_time = time.time()
-    print(f"Time taken for total processing: {(end_processing_time - start_processing_time):.5f} seconds")
+
 
 def play_video(filename, start_time, start_frame):
     app = QApplication(sys.argv)
@@ -95,15 +99,18 @@ def play_video(filename, start_time, start_frame):
     sys.exit(app.exec_())
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print("Usage: python script.py <mp4_file> <wav_file> <rgb_file>")
-        sys.exit(1)
+    # if len(sys.argv) != 4:
+    #     print("Usage: python script.py <mp4_file> <wav_file> <rgb_file>")
+    #     sys.exit(1)
 
-    mp4_file = sys.argv[1]
-    wav_file = sys.argv[2]
-    rgb_file = sys.argv[3] 
+    # mp4_file = sys.argv[1]
+    # wav_file = sys.argv[2]
+    # rgb_file = sys.argv[3]
 
-    mp4_file = './Queries/video11_1.mp4'
-    wav_file = './Queries/audio/video11_1.wav'
-
+    mp4_file = './Queries/video1_1.mp4'
+    wav_file = './Queries/audios/video1_1.wav'
+    rgb_file = ''
+    # start_time = time.time()
     process_video(mp4_file, wav_file, rgb_file)
+    # end_time = time.time()
+    # print(f"Time taken for everything: {(end_time - start_time):.5f} seconds")
