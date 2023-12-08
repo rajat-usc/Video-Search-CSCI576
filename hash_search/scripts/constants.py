@@ -1,7 +1,7 @@
 import os
 from time import perf_counter
 
-base = os.getcwd()
+base = "/Users/shalinisaiprasad/Desktop/MMProject/Video-Search-CSCI576/hash_search"#os.getcwd()
 scripts_path = os.path.join(base, "scripts")
 video_path = os.path.join(base, "video")
 rgb_path = os.path.join(base, "rgb")
@@ -28,35 +28,35 @@ sql_search_frame = """
 SELECT video_name ,video_frame FROM framehash WHERE phash=? and sha256=?;
 """
 
-
-class Timer:
-    def __init__(self, name: str):
-        self.s = 0
-        self.e = 0
-        self.name = name
-        self.runtime = 0
-
-    def start(self):
-        self.s = perf_counter()
-
-    def end(self):
-        self.e = perf_counter()
-
-    def run(self, precision: int):
-        self.runtime = round(self.e - self.s, precision)
-
-    def state(self):
-        self.run(2)
-        print(f" {self.name} : {self.runtime}s")
-
-
-if __name__ == "__main__":
-    x = Timer("test")
-    x.start()
-    print(f"{base=}")
-    print(f"{scripts_path=}")
-    print(f"{video_path=}")
-    print(f"{rgb_path=}")
-    x.end()
-    x.state()
-    print(x.runtime)
+#
+# class Timer:
+#     def __init__(self, name: str):
+#         self.s = 0
+#         self.e = 0
+#         self.name = name
+#         self.runtime = 0
+#
+#     def start(self):
+#         self.s = perf_counter()
+#
+#     def end(self):
+#         self.e = perf_counter()
+#
+#     def run(self, precision: int):
+#         self.runtime = round(self.e - self.s, precision)
+#
+#     def state(self):
+#         self.run(2)
+#         print(f" {self.name} : {self.runtime}s")
+#
+#
+# if __name__ == "__main__":
+#     x = Timer("test")
+#     x.start()
+#     print(f"{base=}")
+#     print(f"{scripts_path=}")
+#     print(f"{video_path=}")
+#     print(f"{rgb_path=}")
+#     x.end()
+#     x.state()
+#     print(x.runtime)

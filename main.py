@@ -24,7 +24,7 @@ def read_scene_greater_than_20():
         return {}
 
 def process_video(mp4_file, wav_file, rgb_file):
-    start_processing_time = time.time()
+    start_processing_time = time.perf_counter()#time()
 
     match_found = False
 
@@ -37,24 +37,26 @@ def process_video(mp4_file, wav_file, rgb_file):
     rgb_folder = os.path.join(base, "RGBs")
     frames_folder = os.path.join(base, "Frames")
 
-    text_matcher = QueryTextMatcher()
     frame_matcher = QueryFrameMatcher(video_folder, rgb_folder)
-    shot_boundary_detector = QueryShotBoundary(mp4_file.split('.mp4')[0])
 
-    hash_matched_chunk = match_frames(rgb_file)
+    hash_matched_chunk = False#match_frames(rgb_file)
 
     if hash_matched_chunk:
         start_frame = frame_matcher.find_query(mp4_file, rgb_file, hash_matched_chunk, None)
-        if start_frame != None:
+        print("***********", start_frame)
+        if start_frame is not None:
             match_found = True
             filename = os.path.join(video_folder, hash_matched_chunk['video_name'] + '.mp4')
-            print(start_frame)
+            print("********", filename, " ", start_frame)
             start_time = start_frame / 30  # Assuming 30 FPS
-            end_processing_time = time.time()
+            end_processing_time = time.perf_counter()#time()
             print(f"Time taken for total processing: {(end_processing_time - start_processing_time):.5f} seconds")
             play_video(filename, start_time, start_frame)
     
     if not match_found:
+        print("Hash matching didn't work")
+        text_matcher = QueryTextMatcher()
+        shot_boundary_detector = QueryShotBoundary(mp4_file.split('.mp4')[0])
         shot_boundary_res = None
         shot_found = False
         frames_folders = os.listdir(frames_folder)
@@ -109,6 +111,7 @@ def process_video(mp4_file, wav_file, rgb_file):
 
 
 def play_video(filename, start_time, start_frame):
+    filename = filename.replace("Video_", "video")
     app = QApplication(sys.argv)
     videoplayer = VideoPlayer(filename, start_time, start_frame)
     videoplayer.setFixedSize(375, 388)
@@ -124,9 +127,9 @@ if __name__ == "__main__":
     # wav_file = sys.argv[2]
     # rgb_file = sys.argv[3]
 
-    mp4_file = './Queries/video1_1.mp4'
-    wav_file = './Queries/audios/video1_1.wav'
-    rgb_file = './Queries/RGBs/video1_1.rgb'
+    mp4_file = './Queries/video1_2.mp4'
+    wav_file = './Queries/audios/video1_2.wav'
+    rgb_file = './Queries/RGBs/video1_2.rgb'
     # start_time = time.time()
     process_video(mp4_file, wav_file, rgb_file)
     # end_time = time.time()

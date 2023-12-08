@@ -1,17 +1,17 @@
 import os
-import constants
-from constants import Timer
-import cv2 as cv
-from time import perf_counter
-from tqdm import tqdm
-from PIL import Image
-import imagehash
-import hashlib
-import csv
+from hash_search.scripts import constants
+# from constants import Timer
+# import cv2 as cv
+# from time import perf_counter
+# from tqdm import tqdm
+# from PIL import Image
+# import imagehash
+# import hashlib
+# import csv
 import subprocess
-import numpy as np
-from collections import defaultdict
-from rgb_hash import RGBVideo
+# import numpy as np
+# from collections import defaultdict
+from hash_search.scripts.rgb_video import RGBVideo
 import sqlite3
 
 
@@ -84,8 +84,12 @@ def match_frames(query_rgb_path):
 #     query_processing.start()
 #     query_name = "video20_2.mp4"
 #     query_path = os.path.join(constants.query_path, query_name)
-#     query_rgb_path = mp4_to_rgb(query_path)
-#     # query_rgb_path = os.path.join(constants.query_path, query_name)
+#     if query_name.endswith("mp4"):
+#         query_path = os.path.join(constants.query_path, query_name)
+#         query_rgb_path = mp4_to_rgb(query_path)
+#     else:
+#         query_rgb_path = os.path.join(constants.query_path, query_name)
+
 #     query = RGBVideo(query_rgb_path)
 #     query_processing.end()
 #     print(query.frames)
